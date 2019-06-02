@@ -1,21 +1,30 @@
 import express from 'express'
-import mongoose from 'mongoose'
+import session from 'express-session'
 
-import URL from '../config/db'
+import passport from '../config/passport'
+
 import Controller from './controllers/base'
-import UserController from './controllers/user'
+import MainController from './controllers/main'
+import AuthController from './controllers/auth'
 
 class App {
+  
+  public app: express.Application
 
   constructor() {
     this.app = express()
-    this.connectDatabase(URL)
+    this.initializeMiddleWares()
     this.initializeControllers([
-      new UserController(),
+      new MainController(),
+      new AuthController(),
     ])
   }
 
-  public app: express.Application
+  private initializeMiddleWares() {
+    this.app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }))
+    this.app.use(passport.initialize())
+    this.app.use(passport.session())
+  }
 
   private initializeControllers(controllers: Controller[]) {
     controllers.forEach(controller => {
@@ -23,15 +32,6 @@ class App {
     })
   }
 
-  private connectDatabase(URL: string): void {
-    mongoose.connect(URL, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-    }).then(
-      () => console.log('Database connection established'),
-      error => console.error(error)
-    )
-  }
 }
 
 export default new App().app

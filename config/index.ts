@@ -7,10 +7,7 @@ export const server: any = {
   PORT: process.env.PORT,
 }
 
-export const database: any = {
-  MONGO_USERNAME: process.env.MONGO_USERNAME,
-  MONGO_PASSWORD: process.env.MONGO_PASSWORD,
-  MONGO_HOSTNAME: process.env.MONGO_HOSTNAME,
-  MONGO_PORT: process.env.MONGO_PORT,
-  MONGO_DB: process.env.MONGO_DB,
+export const githubOauth: any = {
+  GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
 }
