@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express'
 
 import BaseController from './base'
 
+const passport = require('../../config/passport')
+
 class MainController implements BaseController {
 
   public path = '/'
@@ -12,16 +14,19 @@ class MainController implements BaseController {
   }
 
   private initializeRoutes = () => {
-    this.router.get(this.path, this.home)
-    this.router.get(`${this.path}login`, this.login)
+    this.router.get(this.path, this.ensureAuthenticated, this.home)
   }
 
   private home = (req: Request, res: Response) => {
     res.send('Home')
   }
 
-  private login = (req: Request, res: Response) => {
-    res.send('Login!')
+  private ensureAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+      console.log(req)
+      return next()
+    }
+    res.redirect('/auth/github')
   }
 }
 

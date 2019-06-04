@@ -6,19 +6,21 @@ import { githubOauth } from './index'
 const GitHubStrategy = passportGitHub.Strategy
 
 passport.serializeUser<any, any>((user, done) => {
-    done(undefined, user)
+  console.log('passport serialize user')
+  done(null, user.id)
 })
 
-passport.deserializeUser((obj, done) => {
-    done(null, obj)
+passport.deserializeUser((id, done) => {
+  console.log('passport deserializer user')
+  done(null, id)
 })
 
 passport.use(new GitHubStrategy({
-    clientID: githubOauth.GITHUB_CLIENT_ID,
-    clientSecret: githubOauth.GITHUB_CLIENT_SECRET,
-    callbackURL: '/auth/github/callback'
+  clientID: githubOauth.GITHUB_CLIENT_ID,
+  clientSecret: githubOauth.GITHUB_CLIENT_SECRET,
+  callbackURL: '/auth/github/callback',
 }, (accessToken, refreshToken, profile, done) => {
-    return done(profile)
+  done(null, profile)
 }))
 
 export default passport

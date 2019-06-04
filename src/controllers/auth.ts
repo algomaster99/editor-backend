@@ -1,6 +1,6 @@
-import express, { Request, Response } from 'express'
+import express, { Request, Response, NextFunction } from 'express'
+import passport from 'passport'
 
-import passport from '../../config/passport'
 import BaseController from './base'
 
 class AuthController implements BaseController {
@@ -13,20 +13,18 @@ class AuthController implements BaseController {
   }
 
   private initializeRoutes = () => {
-    this.router.get(this.path, this.authenticate)
-    this.router.get(`${this.path}/callback`, this.callback, this.success)
+    this.router.get(this.path, passport.authenticate('github'))
+    this.router.get(`${this.path}/callback`, passport.authenticate('github'), this.success)
+    this.router.get(`${this.path}/logout`, this.logout)
   }
 
-  private authenticate = () => {
-    passport.authenticate('github')
+  private success = (req, res: Response) => {
+    res.send('YAy!!')
   }
 
-  private callback = () => {
-    passport.authenticate('github', { failureRedirect: '/login' })
-  }
-
-  private success = (req: Request, res: Response) => {
-    res.redirect('/')
+  private logout = (req, res: Response) => {
+    req.logout()
+    res.send('You logged out!')
   }
 
 }

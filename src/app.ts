@@ -1,7 +1,8 @@
 import express from 'express'
 import session from 'express-session'
+import passport from 'passport'
 
-import passport from '../config/passport'
+import { sessionSecret } from '../config/index'
 
 import Controller from './controllers/base'
 import MainController from './controllers/main'
@@ -21,7 +22,12 @@ class App {
   }
 
   private initializeMiddleWares() {
-    this.app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }))
+    this.app.use(session({
+      key: 'user',
+      secret: sessionSecret,
+      resave: false,
+      saveUninitialized: true,
+    }))
     this.app.use(passport.initialize())
     this.app.use(passport.session())
   }
